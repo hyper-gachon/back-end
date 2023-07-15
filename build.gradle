@@ -34,6 +34,7 @@ dependencies {
     // crawling & parsing
     implementation 'org.jsoup:jsoup:1.16.1'
     implementation 'org.seleniumhq.selenium:selenium-java:4.10.0'
+    implementation 'io.github.bonigarcia:webdrivermanager:5.4.0'
 
     // JSON
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
