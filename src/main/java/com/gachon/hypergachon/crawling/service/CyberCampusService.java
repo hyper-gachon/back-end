@@ -1,7 +1,7 @@
 package com.gachon.hypergachon.crawling.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gachon.hypergachon.crawling.dto.CyberCampusDto;
+import com.gachon.hypergachon.crawling.entity.CyberCampusEntity;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -57,26 +57,33 @@ public class CyberCampusService {
             List<Map<String, String>> courseInfo = getCourseId(html);
 
             String id = null;
+            List<CyberCampusEntity> cyberCampus = new ArrayList<>();
             for (Map<String, String> i : courseInfo) {
                 // https://cyber.gachon.ac.kr/course/view.php?id=85455
                 // courseId 추출 ex) 85455
                 String courseId = getLastFiveDigits(i.get("link"));
+                String link = i.get("link");
+                String courseName = i.get("courseName");
 
                 // courseId별로 class 생성
+                CyberCampusEntity entity = new CyberCampusEntity(courseId, link, courseName);
+                driver.get(link);
+                Thread.sleep(1000); // 1초대기
 
+                // 강좌의 링크를 이용해 과제(ok), mooc강의, 퀴즈, 공지사항 크롤링
+                entity = getEntity(entity, driver);
+                cyberCampus.add(entity);
             }
 
-
-            // 강좌의 링크를 이용해 과제, mooc강의, 퀴즈, 공지사항 크롤링 + 1초대기(로딩)
-            // CyberCampusDto 상속하는 class 생성 후 저장
+            // class를 리스트?로 변환
 
             // JSON으로 변환
             ObjectMapper objectMapper = new ObjectMapper();
-            //String json = objectMapper.writeValueAsString(fullNotice);
+            //String json = objectMapper.writeValueAsString();
 
             // WebDriver 닫고 함수 종료
             driver.close();
-            if (id == null) return "오 류";
+            if (id == null) return "Fast:Forward";
             return id;
 
         } catch (InterruptedException e) {
@@ -121,12 +128,65 @@ public class CyberCampusService {
                 return lastPart;
             }
         }
-
-        return null; // 혹은 필요에 따라 적절한 에러 메시지를 반환
+        return null;
     }
 
+    private static CyberCampusEntity getEntity(CyberCampusEntity entity, WebDriver driver) {
+        String html = driver.getPageSource();
+        if (html == null || html.isEmpty()) return null;
+        Document doc = Jsoup.parse(html);
+
+        /************************************************
+        assignment crawling (과제 크롤링)
+        과제이름, 과제기간, 과제 제출여부
+         ************************************************/
+        List<CyberCampusEntity.CyberCampusAssignment> assignmentList = new ArrayList<>();
+        Elements elements = doc.select(".modtype_assign .activityinstance");
+        for (Element element : elements) {
+            String link = element.select("a").attr("href"); // 과제 url
+            String name = element.select(".instancename").text(); // 과제 이름
+            String date = element.select(".displayoptions").text(); // 과제 기간
+
+            // 과제 기간을 시작시간, 종료시간으로 쪼개기
+            String[] splitDate = date.split("~");
+            String start = splitDate[0].trim();
+            String end = splitDate[1].trim();
+
+            // 과제 상세 페이지로 이동
+            driver.get(link);
+            String x = driver.getPageSource();
+            if (x == null || x.isEmpty()) return null;
+            Document y = Jsoup.parse(x);
+
+            // 과제 제출여부
+            Element su = y.selectFirst(".submissionstatussubmitted"); // 과제를 제출했을 경우
+            String submit = su != null ? su.text().trim() : "Not Found";
+
+            Boolean isSubmit;
+            // (Submitted for grading)|(제출 완료)
+            if (submit.equals("Submitted for grading") || submit.equals("제출 완료")) {
+                isSubmit = true;
+            } else {
+                isSubmit = false;
+            }
+
+            // 과제 class 생성
+            CyberCampusEntity.CyberCampusAssignment assignment = new CyberCampusEntity.CyberCampusAssignment(
+                    name, start, end, isSubmit
+            );
+            assignmentList.add(assignment);
+        }
+        entity.setAssignments(assignmentList);
 
 
+        /************************************************
+         assignment crawling (과제 크롤링)
+         과제이름, 과제기간, 과제 제출여부
+         ************************************************/
+        List<CyberCampusEntity.CyberCampusMOOC> moocList = new ArrayList<>();
+
+        return entity;
+    }
 }
 
 
