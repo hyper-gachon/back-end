@@ -44,7 +44,7 @@ public class CyberCampusEntity extends CyberCampusDto {
         }
     }
 
-    public class CyberCampusMOOC {
+    public static class CyberCampusMOOC {
         String name;
         String start, end;
         Boolean isWatched;
@@ -57,7 +57,7 @@ public class CyberCampusEntity extends CyberCampusDto {
         }
     }
 
-    public class CyberCampusQuiz {
+    public static class CyberCampusQuiz {
         String name;
         String start, end;
         Boolean isFinish;
@@ -70,7 +70,7 @@ public class CyberCampusEntity extends CyberCampusDto {
         }
     }
 
-    public class CyberCampusAnnouncement {
+    public static class CyberCampusAnnouncement {
         String title;
         String writer;
         String content;

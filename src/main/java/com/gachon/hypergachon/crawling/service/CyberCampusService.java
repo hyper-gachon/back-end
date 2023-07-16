@@ -136,10 +136,11 @@ public class CyberCampusService {
         if (html == null || html.isEmpty()) return null;
         Document doc = Jsoup.parse(html);
 
-        /************************************************
-        assignment crawling (과제 크롤링)
-        과제이름, 과제기간, 과제 제출여부
-         ************************************************/
+        /*================================================
+         * assignment crawling (과제 크롤링)
+         * 과제이름, 과제기간, 과제 제출여부
+         ================================================*/
+
         List<CyberCampusEntity.CyberCampusAssignment> assignmentList = new ArrayList<>();
         Elements elements = doc.select(".modtype_assign .activityinstance");
         for (Element element : elements) {
@@ -179,11 +180,44 @@ public class CyberCampusService {
         entity.setAssignments(assignmentList);
 
 
-        /************************************************
-         assignment crawling (과제 크롤링)
-         과제이름, 과제기간, 과제 제출여부
-         ************************************************/
+        /*================================================
+         * MOOC crawling (mooc강의 크롤링)
+         * 이름, 기간, 수강여부
+         ================================================*/
         List<CyberCampusEntity.CyberCampusMOOC> moocList = new ArrayList<>();
+        elements = doc.select(".activity.vod .activityinstance");
+        for (Element element : elements) {
+            String name = element.select(".instancename").text(); // 이름
+            String date = element.select(".displayoptions .text-ubstrap").text().trim(); // 기간
+
+            // 기간을 시작시간, 종료시간으로 쪼개기
+            String[] splitDate = date.split("~");
+            String start = splitDate[0].trim();
+            String end = splitDate[1].trim();
+
+            /*
+            * 수강여부
+            driver.get("https://cyber.gachon.ac.kr/report/ubcompletion/user_progress.php?id="+entity.getCourseId());
+            Elements x = doc.select("td.text-left button");
+            Boolean isSubmit;
+            // (Submitted for grading)|(수ㄱ 완료)
+            if (submit.equals("Submitted for grading") || submit.equals("제출 완료")) {
+                isSubmit = true;
+            } else {
+                isSubmit = false;
+            }
+             */
+
+            // mooc class 생성
+            CyberCampusEntity.CyberCampusMOOC mooc = new CyberCampusEntity.CyberCampusMOOC(
+                    name, start, end, true
+            );
+            moocList.add(mooc);
+        }
+        entity.setMoocs(moocList);
+
+        // 퀴즈 공지
+
 
         return entity;
     }
