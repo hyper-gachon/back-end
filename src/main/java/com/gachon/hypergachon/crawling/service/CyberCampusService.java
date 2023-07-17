@@ -216,7 +216,36 @@ public class CyberCampusService {
         }
         entity.setMoocs(moocList);
 
-        // 퀴즈 공지
+
+        /*================================================
+         * Quiz crawling (퀴즈 크롤링)
+         * 이름, 기간, 완료여부
+         ================================================*/
+        List<CyberCampusEntity.CyberCampusQuiz> quizList = new ArrayList<>();
+        driver.get("https://cyber.gachon.ac.kr/mod/quiz/index.php?id="+entity.getCourseId());
+        String q = driver.getPageSource();
+        if (q == null || q.isEmpty()) return null;
+        Document qd = Jsoup.parse(q);
+        elements = qd.select("table.generaltable.table.table-bordered tbody tr");
+        for (Element element : elements) {
+            String link = element.select("td.cell.c1 a").attr("href").trim(); // 퀴즈 상세링크
+            String name = element.select("td.cell.c1 a").text(); // 이름
+            String end = element.select("td.cell.c2").text().trim(); // 종료시각
+
+            // 완료여부
+            driver.get("https://cyber.gachon.ac.kr/mod/quiz/"+link);
+            Elements x = doc.select("table.generaltable.quizattemptsummary.table.table-bordered");
+            Boolean isFinish;
+            if (!x.isEmpty()) isFinish = true;
+            else isFinish = false;
+
+            // mooc class 생성
+            CyberCampusEntity.CyberCampusQuiz quiz = new CyberCampusEntity.CyberCampusQuiz(
+                    name, end, isFinish
+            );
+            quizList.add(quiz);
+        }
+        entity.setQuizzes(quizList);
 
 
         return entity;

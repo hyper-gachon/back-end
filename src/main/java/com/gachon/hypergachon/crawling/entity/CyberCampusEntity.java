@@ -59,12 +59,11 @@ public class CyberCampusEntity extends CyberCampusDto {
 
     public static class CyberCampusQuiz {
         String name;
-        String start, end;
+        String end;
         Boolean isFinish;
 
-        public CyberCampusQuiz(String name, String start, String end, Boolean isFinish) {
+        public CyberCampusQuiz(String name, String end, Boolean isFinish) {
             this.name = name;
-            this.start = start;
             this.end = end;
             this.isFinish = isFinish;
         }
