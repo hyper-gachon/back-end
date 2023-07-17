@@ -70,16 +70,16 @@ public class CyberCampusEntity extends CyberCampusDto {
     }
 
     public static class CyberCampusAnnouncement {
+        String link;
         String title;
         String writer;
-        String content;
         String uploadTime;
         int hit;
 
-        public CyberCampusAnnouncement(String title, String writer, String content, String uploadTime, int hit) {
+        public CyberCampusAnnouncement(String link, String title, String writer, String uploadTime, int hit) {
+            this.link = link;
             this.title = title;
             this.writer = writer;
-            this.content = content;
             this.uploadTime = uploadTime;
             this.hit = hit;
         }

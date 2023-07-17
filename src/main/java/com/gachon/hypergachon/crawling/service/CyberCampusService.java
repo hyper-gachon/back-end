@@ -1,7 +1,7 @@
 package com.gachon.hypergachon.crawling.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gachon.hypergachon.crawling.entity.CyberCampusEntity;
+import com.google.gson.Gson;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -56,7 +56,7 @@ public class CyberCampusService {
             String html = driver.getPageSource();
             List<Map<String, String>> courseInfo = getCourseId(html);
 
-            String id = null;
+            //String id = null;
             List<CyberCampusEntity> cyberCampus = new ArrayList<>();
             for (Map<String, String> i : courseInfo) {
                 // https://cyber.gachon.ac.kr/course/view.php?id=85455
@@ -75,16 +75,15 @@ public class CyberCampusService {
                 cyberCampus.add(entity);
             }
 
-            // class를 리스트?로 변환
-
-            // JSON으로 변환
-            ObjectMapper objectMapper = new ObjectMapper();
-            //String json = objectMapper.writeValueAsString();
+            // List로 이루어진 class를 JSON으로 변환
+            // Initialize an instance of Gson
+            Gson gson = new Gson();
+            String json = gson.toJson(cyberCampus);
 
             // WebDriver 닫고 함수 종료
             driver.close();
-            if (id == null) return "Fast:Forward";
-            return id;
+            //if (id == null) return "Fast:Forward";
+            return json;
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -246,6 +245,38 @@ public class CyberCampusService {
             quizList.add(quiz);
         }
         entity.setQuizzes(quizList);
+
+
+        /*================================================
+         * Announcement crawling (공지사항 크롤링)
+         * 링크, 제목, 작성자, 작성시간, 조회
+         ================================================*/
+        List<CyberCampusEntity.CyberCampusAnnouncement> announcementList = new ArrayList<>();
+        String annLink = doc.selectFirst(".course-content #section-0 .content .activityinstance a").attr("href");
+        driver.get(annLink);
+        q = driver.getPageSource();
+        if (q == null || q.isEmpty()) return null;
+        qd = Jsoup.parse(q);
+        elements = qd.select(".ubboard_table.table.table-hover tbody tr");
+        if (elements.size() == 1 && elements.get(0).select("td").attr("colspan").equals("5"))
+            entity.setAnnouncements(announcementList);
+        else {
+            for (Element element : elements) {
+                String link = element.select("td a").attr("href").trim(); // 공지 상세링크
+                String name = element.select("td a").text(); // 제목
+                Elements tmp = element.select("td.tcenter");
+                String writer = tmp.get(tmp.size()-3).text().trim(); // 작성자
+                String uploadTime = tmp.get(tmp.size()-2).text().trim(); // 작성시각
+                String hit = tmp.get(tmp.size()-1).text().trim(); // 조회수
+
+                // mooc class 생성
+                CyberCampusEntity.CyberCampusAnnouncement announcement = new CyberCampusEntity.CyberCampusAnnouncement(
+                        link, name, writer, uploadTime, Integer.parseInt(hit)
+                );
+                announcementList.add(announcement);
+            }
+            entity.setAnnouncements(announcementList);
+        }
 
 
         return entity;
