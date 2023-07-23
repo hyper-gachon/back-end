@@ -21,11 +21,17 @@ public enum ErrorMessage {
     POST_NOT_FOUND(NOT_FOUND, false, "포스트를 찾을 수 없습니다."),
     ALREADY_SIGNUPED_EMAIL_USER(BAD_REQUEST, false, "이미 회원가입한 유저입니다."),
 
+    INVAILID_USERID_JWT_TOKEN(UNAUTHORIZED, false, "유효하지 JWT 토큰에 유저 정보가 유효하지 않습니다."),
+    INVAILID_JWT_TOKEN(UNAUTHORIZED, false, "유효하지 JWT 토큰 입니다."),
+    NOT_FIND_JWT_TOKEN(UNAUTHORIZED, false, "JWT 토큰을 찾을 수 없습니다."),
+
     ALREADY_EXISTED_ARTICLE(BAD_REQUEST, false, "이미 존재하는 기사입니다."),
     ARTICLE_NOT_FOUND(NOT_FOUND, false, "해당 기업을 찾을 수 없습니다."),
 
     ALREADY_EXISTED_COMPANY(BAD_REQUEST, false, "이미 존재하는 기업입니다."),
     COMPANY_NOT_FOUND(NOT_FOUND, false, "해당 기업을 찾을 수 없습니다.");
+
+
 
 
     private final int code;
