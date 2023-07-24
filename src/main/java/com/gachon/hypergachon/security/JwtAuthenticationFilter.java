@@ -36,16 +36,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        System.out.println(request.getRequestURI());
+
         // 1. 토큰이 필요하지 않은 API URL에 대해서 배열로 구성합니다.
         List<String> list = Arrays.asList(
-                "/swagger-ui/index.html","/swagger-ui/**", "/v3/**","/users/login", "/users/sign-in", "/users/emails/test"
+                "/users/login", "/users/sign-in", "/users/send-emails", "/users/check-emails"
 //                "api/v1/code/codeList"
         );
-
+        if(request.getRequestURI().split("/")[1].equals("swagger-ui") || request.getRequestURI().split("/")[1].equals("v3")){
+            chain.doFilter(request, response);
+            return;
+        }
         // 2. 토큰이 필요하지 않은 API URL의 경우 => 로직 처리 없이 다음 필터로 이동
         if (list.contains(request.getRequestURI())) {
-            System.out.println("토큰 노필요 API"+request.getRequestURI());
             chain.doFilter(request, response);
             return;
         }
@@ -58,7 +60,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // [STEP1] Client에서 API를 요청할때 Header를 확인합니다.
         String header = request.getHeader(AuthConstants.AUTH_HEADER);
-        System.out.println("[+] header Check: " + header);
 
         try {
             // [STEP2-1] Header 내에 토큰이 존재하는 경우
@@ -137,7 +138,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 .map(tokenProvider::validateTokenAndGetSubject)
                 .orElse("anonymous:anonymous")
                 .split(":");
-        System.out.println("split /// "+ split);
 
         return new User(split[0], "", List.of(new SimpleGrantedAuthority(split[1])));
     }
