@@ -24,9 +24,8 @@ public class AdvertiseService {
 
     // 광고 제작 탭
     public Long createAd(User user, CreateAdReq createAdReq) {
-
         // 보낸 사용자 id와 jwt토큰상의 유저 id 정보가 다를 경우 실행
-        if(!user.getUsername().equals(createAdReq.getId()))
+        if(!user.getUsername().equals(createAdReq.getId().toString()))
             throw new BusinessException(USER_JWT_INFORMATION_NO_CORRECT);
 
         Advertise advertise = Advertise.builder()
