@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 "/users/login", "/users/sign-in", "/users/send-emails", "/users/check-emails"
 //                "api/v1/code/codeList"
         );
-        if(request.getRequestURI().split("/")[1].equals("swagger-ui") || request.getRequestURI().split("/")[1].equals("v3")){
+        if(request.getRequestURI().split("/")[1].equals("swagger-ui") || request.getRequestURI().split("/")[1].equals("v3") || request.getRequestURI().split("/")[1].equals("crawling")){
             chain.doFilter(request, response);
             return;
         }
