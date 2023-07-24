@@ -13,6 +13,7 @@ public enum ErrorMessage {
     USER_NOT_FOUND(NOT_FOUND, false, "해당 회원을 찾을 수 없습니다."),
     CATEGORY_NOT_FOUND(NOT_FOUND, false, "해당 회원의 카테고리를 찾을 수 없습니다."),
     WRONG_PASSWORD(NOT_FOUND, false, "비밀번호가 맞지 않습니다."),
+    WRONG_EMAIL_CODE(NOT_FOUND, false, "이메일 코드가 일치하지 않습니다."),
     WRONG_POST(NOT_FOUND,false,"해당 포스트를 찾을 수 없습니다."),
     FOLLOW_NOT_FOUND(NOT_FOUND, false, "팔로잉을 찾을 수 없습니다."),
     COMMENT_NOT_FOUND(NOT_FOUND, false, "댓글을 찾을 수 없습니다"),
@@ -24,6 +25,7 @@ public enum ErrorMessage {
     INVAILID_USERID_JWT_TOKEN(UNAUTHORIZED, false, "유효하지 JWT 토큰에 유저 정보가 유효하지 않습니다."),
     INVAILID_JWT_TOKEN(UNAUTHORIZED, false, "유효하지 JWT 토큰 입니다."),
     NOT_FIND_JWT_TOKEN(UNAUTHORIZED, false, "JWT 토큰을 찾을 수 없습니다."),
+    USER_JWT_INFORMATION_NO_CORRECT(FORBIDDEN, false, "JWT 인증 정보와 유저 정보가 다릅니다."),
 
     ALREADY_EXISTED_ARTICLE(BAD_REQUEST, false, "이미 존재하는 기사입니다."),
     ARTICLE_NOT_FOUND(NOT_FOUND, false, "해당 기업을 찾을 수 없습니다."),

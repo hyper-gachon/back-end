@@ -1,5 +1,9 @@
 package com.gachon.hypergachon.domain.user.service;
 
+import com.gachon.hypergachon.domain.user.dto.request.EmailCheckDto;
+import com.gachon.hypergachon.exception.BusinessException;
+import com.gachon.hypergachon.response.ErrorMessage;
+import com.gachon.hypergachon.utils.RedisUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +15,8 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
+import static com.gachon.hypergachon.response.ErrorMessage.*;
+
 @Service
 @RequiredArgsConstructor
 public class EmailService {
@@ -19,6 +25,9 @@ public class EmailService {
     private final JavaMailSender emailSender;
     // 타임리프를사용하기 위한 객체를 의존성 주입으로 가져온다
     private final SpringTemplateEngine templateEngine;
+
+    private final RedisUtil redisUtil;
+
     private String authNum; //랜덤 인증 코드
 
     //랜덤 인증 코드 생성
@@ -54,10 +63,14 @@ public class EmailService {
 
         //메일전송에 필요한 정보 설정
         MimeMessage emailForm = createEmailForm(toEmail);
+
+        // redis에 5분간 email 인증 코드 저장(key = email, value = code)
+        redisUtil.setDataExpire(toEmail, authNum, 60 * 5L);
+
         //실제 메일 전송
         emailSender.send(emailForm);
 
-        return authNum; //인증 코드 반환
+        return redisUtil.getData(toEmail); //인증 코드 반환
     }
 
     //타임리프를 이용한 context 설정
@@ -67,5 +80,13 @@ public class EmailService {
         return templateEngine.process("mail", context); //mail.html
     }
 
+
+    // 이메일 확인
+    public Boolean checkEmailCode(EmailCheckDto emailCheckDto){
+        if(!emailCheckDto.getCode().equals(redisUtil.getData(emailCheckDto.getEmail())))
+            throw new BusinessException(WRONG_EMAIL_CODE);
+
+        return true;
+    }
 
 }
