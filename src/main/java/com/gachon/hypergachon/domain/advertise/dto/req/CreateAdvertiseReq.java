@@ -1,10 +1,10 @@
-package com.gachon.hypergachon.domain.advertise.dto;
+package com.gachon.hypergachon.domain.advertise.dto.req;
 
 import lombok.Getter;
 
 @Getter
-public class CreateAdReq {
-    Long id;
+public class CreateAdvertiseReq {
+    Long userId;
     String title;
     String content;
     String startDate;
