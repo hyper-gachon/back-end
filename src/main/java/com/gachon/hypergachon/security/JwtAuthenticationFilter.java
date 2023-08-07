@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -30,12 +31,15 @@ import java.util.Optional;
 import static com.gachon.hypergachon.response.ErrorMessage.*;
 
 @RequiredArgsConstructor
+@Slf4j
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
+
+        log.info("req URI : " + request.getRequestURI());
 
         // 1. 토큰이 필요하지 않은 API URL에 대해서 배열로 구성합니다.
         List<String> list = Arrays.asList(
@@ -86,7 +90,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             // [STEP2-1] 토큰이 존재하지 않는 경우
             else {
-                System.out.println("토큰 없음 ㅋㅋ: " + header);
                 throw new BusinessException(NOT_FIND_JWT_TOKEN);
             }
         } catch (BusinessException e) {
