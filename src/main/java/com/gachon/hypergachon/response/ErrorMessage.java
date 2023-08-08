@@ -19,8 +19,10 @@ public enum ErrorMessage {
     COMMENT_NOT_FOUND(NOT_FOUND, false, "댓글을 찾을 수 없습니다"),
     INVALID_FILE_UPLOAD(BAD_REQUEST, false, "파일 업로드에 실패하였습니다."),
     INVALID_FORMAT(BAD_REQUEST, false, "형식에 맞지 않습니다."),
-    POST_NOT_FOUND(NOT_FOUND, false, "포스트를 찾을 수 없습니다."),
+    ADVERTISE_NOT_FOUND(NOT_FOUND, false, "해당 광고를 찾을 수 없습니다."),
     ALREADY_SIGNUPED_EMAIL_USER(BAD_REQUEST, false, "이미 회원가입한 유저입니다."),
+
+    WRITER_NOT_MATCH(BAD_REQUEST, false, "해당 포스트를 삭제할 권한이 없습니다."),
 
     INVAILID_USERID_JWT_TOKEN(UNAUTHORIZED, false, "유효하지 JWT 토큰에 유저 정보가 유효하지 않습니다."),
     INVAILID_JWT_TOKEN(UNAUTHORIZED, false, "유효하지 JWT 토큰 입니다."),
