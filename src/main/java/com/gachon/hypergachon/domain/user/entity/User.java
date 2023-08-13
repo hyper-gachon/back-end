@@ -2,6 +2,7 @@ package com.gachon.hypergachon.domain.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gachon.hypergachon.domain.advertise.entity.Advertise;
+import com.gachon.hypergachon.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 @Entity
-public class User {
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

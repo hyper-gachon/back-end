@@ -1,13 +1,14 @@
 package com.gachon.hypergachon.domain.advertise.entity;
 
 import com.gachon.hypergachon.domain.user.entity.User;
+import com.gachon.hypergachon.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Advertise {
+public class Advertise extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
