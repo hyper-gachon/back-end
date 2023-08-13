@@ -6,7 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class LoginResDto {
-    Long id;
-    String name;
-    String token;
+    private Long id;
+    private String name;
+    private String accessToken;
+    private String refreshToken;
 }

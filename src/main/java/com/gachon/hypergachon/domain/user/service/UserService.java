@@ -6,11 +6,18 @@ import com.gachon.hypergachon.domain.user.entity.User;
 import com.gachon.hypergachon.domain.user.repository.UserRepository;
 import com.gachon.hypergachon.exception.BusinessException;
 import com.gachon.hypergachon.domain.user.dto.request.UserDto;
+import com.gachon.hypergachon.security.AuthConstants;
 import com.gachon.hypergachon.security.TokenProvider;
+import com.gachon.hypergachon.security.dto.TokenDto;
+import com.gachon.hypergachon.utils.RedisUtil;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 import static com.gachon.hypergachon.response.ErrorMessage.*;
 
@@ -21,8 +28,8 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final EmailService emailService;
     private final TokenProvider tokenProvider;
+    private final RedisUtil redisUtil;
 
     // 유저 회원가입
     public String signIn(UserDto userDto){
@@ -42,13 +49,68 @@ public class UserService {
     }
 
     // 유저 로그인
-    public LoginResDto login(LoginReqDto loginReqDto){
+    public LoginResDto login(LoginReqDto loginReqDto, HttpServletResponse httpServletResponse){
         User findUser = userRepository.findUserByUserId(loginReqDto.getUserId());
         if(findUser== null) throw new BusinessException(USER_NOT_FOUND);
         if(!passwordEncoder.matches(loginReqDto.getPassword(), findUser.getPassword()))
             throw new BusinessException(WRONG_PASSWORD);
 
-        String token = tokenProvider.createToken(String.format("%s:%s", findUser.getId(), loginReqDto.getUserId()));
-        return new LoginResDto(findUser.getId(), findUser.getName(), token);
+        // refreshToken 생성
+        String refreshToken = tokenProvider.createRefreshToken();
+        // accessToken 생성
+        String accessToken = tokenProvider.createAccessToken(String.format("%s:%s", findUser.getId(), loginReqDto.getUserId()));
+        if (redisUtil.getData(findUser.getUserId()) != null) {
+            String originalRefreshToken = redisUtil.getData(findUser.getUserId());
+            long refreshExpireTime = TokenProvider.getExpDateFromToken(originalRefreshToken) * 1000;
+            long diffDays = (refreshExpireTime - System.currentTimeMillis()) / 1000 / (24 * 3600);
+            System.out.println("diff day : " + diffDays);
+            if (diffDays <= 2) {
+                redisUtil.setDataExpire(findUser.getUserId(), refreshToken, 60 * 60 * 24 * 5L);
+            } else {
+                refreshToken = originalRefreshToken;
+            }
+        } else {
+            redisUtil.setDataExpire(findUser.getUserId(), refreshToken, 60 * 60 * 24 * 5L);
+        }
+
+
+
+        return new LoginResDto(findUser.getId(), findUser.getName(), accessToken, refreshToken);
+    }
+
+    // 첫번째 access token에서 exp가 만료되었을 때 부르는 api로
+    // header에 담긴 token을 까서 redis에서 refresh토큰을 찾고
+    public TokenDto accessRequest(String refreshToken, HttpServletRequest request){
+
+        // [STEP1] Client에서 API를 요청할때 Header를 확인합니다.
+        String header = request.getHeader(AuthConstants.AUTH_HEADER);
+
+        // [STEP2] Header 내에 토큰을 추출합니다.
+        String accessToken = header.split(" ")[1];
+
+        String[] split = Optional.ofNullable(accessToken)
+                .filter(subject -> subject.length() >= 10)
+                .map(tokenProvider::getTokenSubject)
+                .orElse("anonymous:anonymous")
+                .split(":");
+
+        String userId = split[1];
+
+        if (redisUtil.getData(userId) != null) {
+            long refreshExpireTime = TokenProvider.getExpDateFromToken(refreshToken) * 1000;
+            long diffDays = (refreshExpireTime - System.currentTimeMillis()) / 1000 / (24 * 3600);
+
+            System.out.println("diff day : " + diffDays);
+            System.out.println(split.toString());
+
+            if (diffDays <= 2) {
+                refreshToken = tokenProvider.createRefreshToken();
+                redisUtil.setDataExpire(userId, refreshToken, 60 * 60 * 24 * 5L);
+            }
+            accessToken = tokenProvider.createAccessToken(String.format("%s:%s", split[0], split[1]));
+        } else {
+            throw new BusinessException(INVAILID_JWT_REFRESH_TOKEN);
+        }
+        return new TokenDto(accessToken, refreshToken);
     }
 }
