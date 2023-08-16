@@ -100,8 +100,6 @@ public class UserService {
             long refreshExpireTime = TokenProvider.getExpDateFromToken(refreshToken) * 1000;
             long diffDays = (refreshExpireTime - System.currentTimeMillis()) / 1000 / (24 * 3600);
 
-            System.out.println("diff day : " + diffDays);
-            System.out.println(split.toString());
 
             if (diffDays <= 2) {
                 refreshToken = tokenProvider.createRefreshToken();
