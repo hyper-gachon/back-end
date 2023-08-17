@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public class CreateAdvertiseReq {
-    Long userId;
-    String title;
-    String content;
-    String startDate;
-    String endDate;
-    Double latitude;
-    Double longitude;
+    private Long userId;
+    private String title;
+    private String content;
+    private String startDate;
+    private String endDate;
+    private Double latitude;
+    private Double longitude;
 }

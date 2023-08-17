@@ -25,7 +25,8 @@ public enum ErrorMessage {
     WRITER_NOT_MATCH(BAD_REQUEST, false, "해당 포스트를 삭제할 권한이 없습니다."),
 
     INVAILID_USERID_JWT_TOKEN(UNAUTHORIZED, false, "유효하지 JWT 토큰에 유저 정보가 유효하지 않습니다."),
-    INVAILID_JWT_TOKEN(UNAUTHORIZED, false, "유효하지 JWT 토큰 입니다."),
+    INVAILID_JWT_ACCESS_TOKEN(UNAUTHORIZED, false, "유효하지 JWT ACCESS 토큰 입니다."),
+    INVAILID_JWT_REFRESH_TOKEN(UNAUTHORIZED, false, "유효하지 JWT REFRESH 토큰 입니다."),
     NOT_FIND_JWT_TOKEN(UNAUTHORIZED, false, "JWT 토큰을 찾을 수 없습니다."),
     USER_JWT_INFORMATION_NO_CORRECT(FORBIDDEN, false, "JWT 인증 정보와 유저 정보가 다릅니다."),
 

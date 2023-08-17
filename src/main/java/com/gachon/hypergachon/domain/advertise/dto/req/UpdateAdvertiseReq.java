@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class UpdateAdvertiseReq {
-    Long postId;
-    String title;
-    String content;
-    String startDate;
-    String endDate;
-    Double latitude;
-    Double longitude;
+    private Long postId;
+    private String title;
+    private String content;
+    private String startDate;
+    private String endDate;
+    private Double latitude;
+    private Double longitude;
 }

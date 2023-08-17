@@ -3,12 +3,16 @@ package com.gachon.hypergachon.domain.user.controller;
 import com.gachon.hypergachon.domain.user.dto.request.EmailCheckDto;
 import com.gachon.hypergachon.domain.user.dto.request.LoginReqDto;
 import com.gachon.hypergachon.domain.user.dto.response.LoginResDto;
+import com.gachon.hypergachon.domain.user.dto.request.RefreshTokenReqDto;
 import com.gachon.hypergachon.domain.user.service.EmailService;
 import com.gachon.hypergachon.response.BaseResponseDto;
 import com.gachon.hypergachon.domain.user.dto.request.EmailReqDto;
 import com.gachon.hypergachon.domain.user.dto.request.UserDto;
 import com.gachon.hypergachon.domain.user.service.UserService;
+import com.gachon.hypergachon.security.dto.TokenDto;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,13 +38,19 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public BaseResponseDto<LoginResDto> login(@RequestBody LoginReqDto loginReqDto) {
-        return new BaseResponseDto<>(userService.login(loginReqDto));
+    public BaseResponseDto<LoginResDto> login(@RequestBody LoginReqDto loginReqDto, HttpServletResponse response) {
+        return new BaseResponseDto<>(userService.login(loginReqDto, response));
     }
 
 
     @PostMapping("/sign-in")
     public BaseResponseDto<String> signIn(@RequestBody UserDto userDto) {
         return new BaseResponseDto<>(userService.signIn(userDto));
+    }
+
+    @GetMapping("/access")
+    public BaseResponseDto<TokenDto> accessRequest(@RequestBody RefreshTokenReqDto refreshTokenReqDto, HttpServletRequest request) {
+        TokenDto tokenDto = userService.accessRequest(refreshTokenReqDto.getRefreshToken(), request);
+        return new BaseResponseDto<>(tokenDto);
     }
 }

@@ -39,13 +39,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
 
-        log.info("req URI : " + request.getRequestURI());
+        log.info("req URI : " + request.getRequestURI() + "   :: client IP : " + request.getRemoteAddr());
 
         // 1. 토큰이 필요하지 않은 API URL에 대해서 배열로 구성합니다.
         List<String> list = Arrays.asList(
-                "/users/login", "/users/sign-in", "/users/send-emails", "/users/check-emails"
+                "/users/login", "/users/sign-in", "/users/send-emails", "/users/check-emails", "/users/access"
 //                "api/v1/code/codeList"
         );
+        if(request.getRequestURI().equals("/"))
+            return;
         if(request.getRequestURI().split("/")[1].equals("swagger-ui") || request.getRequestURI().split("/")[1].equals("v3") || request.getRequestURI().split("/")[1].equals("crawling")){
             chain.doFilter(request, response);
             return;

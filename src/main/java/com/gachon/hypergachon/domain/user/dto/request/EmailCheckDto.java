@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class EmailCheckDto {
-    String email;
-    String code;
+    private String email;
+    private String code;
 }
