@@ -58,7 +58,7 @@ public class EmailService {
     }
 
     //실제 메일 전송
-    public String sendEmail(String toEmail) throws MessagingException, UnsupportedEncodingException {
+    public Boolean sendEmail(String toEmail) throws MessagingException, UnsupportedEncodingException {
 
         //메일전송에 필요한 정보 설정
         MimeMessage emailForm = createEmailForm(toEmail);
@@ -69,7 +69,7 @@ public class EmailService {
         //실제 메일 전송
         emailSender.send(emailForm);
 
-        return redisUtil.getData(toEmail); //인증 코드 반환
+        return true;
     }
 
     //타임리프를 이용한 context 설정

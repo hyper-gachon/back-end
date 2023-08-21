@@ -2,6 +2,8 @@ package com.gachon.hypergachon.domain.advertise.controller;
 
 import com.gachon.hypergachon.domain.advertise.dto.req.CreateAdvertiseReq;
 import com.gachon.hypergachon.domain.advertise.dto.req.UpdateAdvertiseReq;
+import com.gachon.hypergachon.domain.advertise.dto.res.CreateAdvertiseRes;
+import com.gachon.hypergachon.domain.advertise.dto.res.DeleteAdvertiseRes;
 import com.gachon.hypergachon.domain.advertise.dto.res.GetAdvertiseRes;
 import com.gachon.hypergachon.domain.advertise.service.AdvertiseService;
 import com.gachon.hypergachon.response.BaseResponseDto;
@@ -27,7 +29,7 @@ public class AdvertiseController {
 
     // 광고 제작 API
     @PostMapping("")
-    public BaseResponseDto<Long> createAd(@AuthenticationPrincipal User user, @RequestBody CreateAdvertiseReq createAdvertiseReq){
+    public BaseResponseDto<CreateAdvertiseRes> createAd(@AuthenticationPrincipal User user, @RequestBody CreateAdvertiseReq createAdvertiseReq){
         return new BaseResponseDto<>(advertiseService.createAd(user, createAdvertiseReq));
     }
 
@@ -40,7 +42,7 @@ public class AdvertiseController {
 
     // 업로드한 광고 삭제 API
     @DeleteMapping("/{postId}")
-    public BaseResponseDto<Boolean> deleteAd(@AuthenticationPrincipal User user, @PathVariable Long postId){
+    public BaseResponseDto<DeleteAdvertiseRes> deleteAd(@AuthenticationPrincipal User user, @PathVariable Long postId){
         return new BaseResponseDto<>(advertiseService.deleteAdvertise(user, postId));
     }
 

@@ -21,4 +21,23 @@ public class GetAdvertiseRes {
     private Double latitude;
 
     private Double longitude;
+
+
+    public static GetAdvertiseRes of(Long id,
+                                     String title,
+                                     String content,
+                                     String startDate,
+                                     String endDate,
+                                     Double latitude,
+                                     Double longitude) {
+        return GetAdvertiseRes.builder()
+                .id(id)
+                .title(title)
+                .content(content)
+                .startDate(startDate)
+                .endDate(endDate)
+                .latitude(latitude)
+                .longitude(longitude)
+                .build();
+    }
 }
