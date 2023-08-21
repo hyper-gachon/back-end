@@ -2,6 +2,8 @@ package com.gachon.hypergachon.domain.advertise.service;
 
 import com.gachon.hypergachon.domain.advertise.dto.req.CreateAdvertiseReq;
 import com.gachon.hypergachon.domain.advertise.dto.req.UpdateAdvertiseReq;
+import com.gachon.hypergachon.domain.advertise.dto.res.CreateAdvertiseRes;
+import com.gachon.hypergachon.domain.advertise.dto.res.DeleteAdvertiseRes;
 import com.gachon.hypergachon.domain.advertise.dto.res.GetAdvertiseRes;
 import com.gachon.hypergachon.domain.advertise.entity.Advertise;
 import com.gachon.hypergachon.domain.advertise.repository.AdvertiseRepository;
@@ -27,13 +29,10 @@ public class AdvertiseService {
     private final UserRepository userRepository;
 
     // 광고 제작 탭
-    public Long createAd(User user, CreateAdvertiseReq createAdvertiseReq) {
-        // 보낸 사용자 id와 jwt토큰상의 유저 id 정보가 다를 경우 실행
-        if(!user.getUsername().equals(createAdvertiseReq.getUserId().toString()))
-            throw new BusinessException(USER_JWT_INFORMATION_NO_CORRECT);
+    public CreateAdvertiseRes createAd(User user, CreateAdvertiseReq createAdvertiseReq) {
 
         Advertise advertise = Advertise.builder()
-                .user(userRepository.findById(createAdvertiseReq.getUserId()).get())
+                .user(userRepository.findById(Long.valueOf(user.getUsername())).get())
                 .title(createAdvertiseReq.getTitle())
                 .content(createAdvertiseReq.getContent())
                 .startDate(createAdvertiseReq.getStartDate())
@@ -44,7 +43,7 @@ public class AdvertiseService {
 
         Advertise createAdvertise = advertiseRepository.save(advertise);
 
-        return createAdvertise.getId();
+        return CreateAdvertiseRes.of(createAdvertise.getId());
     }
 
     // 유저 올린 광고 찾기
@@ -53,15 +52,15 @@ public class AdvertiseService {
         ArrayList<GetAdvertiseRes> getAdvertiseResList = new ArrayList<>();
 
         for (Advertise advertise : advertiseList) {
-            GetAdvertiseRes getAdvertiseRes = GetAdvertiseRes.builder()
-                    .id(advertise.getId())
-                    .title(advertise.getTitle())
-                    .content(advertise.getContent())
-                    .startDate(advertise.getStartDate())
-                    .endDate(advertise.getEndDate())
-                    .latitude(advertise.getLatitude())
-                    .longitude(advertise.getLongitude())
-                    .build();
+            GetAdvertiseRes getAdvertiseRes =
+                    GetAdvertiseRes.of(
+                            advertise.getId(),
+                            advertise.getTitle(),
+                            advertise.getContent(),
+                            advertise.getStartDate(),
+                            advertise.getEndDate(),
+                            advertise.getLatitude(),
+                            advertise.getLongitude());
 
             getAdvertiseResList.add(getAdvertiseRes);
            }
@@ -69,7 +68,7 @@ public class AdvertiseService {
     }
 
     // 유저 올린 광고 삭제
-    public Boolean deleteAdvertise(User user, Long postId){
+    public DeleteAdvertiseRes deleteAdvertise(User user, Long postId){
         Optional<Advertise> advertise = advertiseRepository.findById(postId);
 
         // 해당 광고가 존재하는지 확인
@@ -81,7 +80,7 @@ public class AdvertiseService {
 
         advertiseRepository.deleteById(postId);
 
-        return true;
+        return DeleteAdvertiseRes.of(true);
     }
 
 
@@ -107,17 +106,7 @@ public class AdvertiseService {
                 updateAdvertiseReq.getLongitude()
         );
 
-        GetAdvertiseRes getAdvertiseRes = GetAdvertiseRes.builder()
-                .id(ad.getId())
-                .title(ad.getTitle())
-                .content(ad.getContent())
-                .startDate(ad.getStartDate())
-                .endDate(ad.getEndDate())
-                .latitude(ad.getLatitude())
-                .longitude(ad.getLongitude())
-                .build();
-
-        return getAdvertiseRes;
+        return GetAdvertiseRes.of(ad.getId(), ad.getTitle(), ad.getContent(), ad.getStartDate(), ad.getEndDate(),ad.getLatitude(),ad.getLongitude());
     }
 
     // 해당 포스트를 작성한 유저인지 확인

@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class CreateAdvertiseReq {
-    private Long userId;
     private String title;
     private String content;
     private String startDate;
