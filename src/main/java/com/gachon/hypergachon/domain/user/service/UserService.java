@@ -2,6 +2,7 @@ package com.gachon.hypergachon.domain.user.service;
 
 import com.gachon.hypergachon.domain.user.dto.request.LoginReqDto;
 import com.gachon.hypergachon.domain.user.dto.response.LoginResDto;
+import com.gachon.hypergachon.domain.user.dto.response.SignInResDto;
 import com.gachon.hypergachon.domain.user.entity.User;
 import com.gachon.hypergachon.domain.user.repository.UserRepository;
 import com.gachon.hypergachon.exception.BusinessException;
@@ -32,7 +33,7 @@ public class UserService {
     private final RedisUtil redisUtil;
 
     // 유저 회원가입
-    public String signIn(UserDto userDto){
+    public SignInResDto signIn(UserDto userDto){
         if(userRepository.existsByUserId(userDto.getUserId()))
             throw new BusinessException(ALREADY_SIGNUPED_EMAIL_USER);
 
@@ -44,8 +45,9 @@ public class UserService {
                 .name(userDto.getName())
                 .build();
 
-        User signedUser = userRepository.save(user);
-        return "success";
+        userRepository.save(user);
+
+        return SignInResDto.of(true);
     }
 
     // 유저 로그인
@@ -75,7 +77,7 @@ public class UserService {
 
 
 
-        return new LoginResDto(findUser.getId(), findUser.getName(), accessToken, refreshToken);
+        return LoginResDto.of(findUser.getId(), findUser.getName(), accessToken, refreshToken);
     }
 
     // 첫번째 access token에서 exp가 만료되었을 때 부르는 api로
@@ -109,6 +111,6 @@ public class UserService {
         } else {
             throw new BusinessException(INVAILID_JWT_REFRESH_TOKEN);
         }
-        return new TokenDto(accessToken, refreshToken);
+        return TokenDto.of(accessToken, refreshToken);
     }
 }

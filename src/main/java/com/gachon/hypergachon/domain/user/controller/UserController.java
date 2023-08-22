@@ -2,8 +2,11 @@ package com.gachon.hypergachon.domain.user.controller;
 
 import com.gachon.hypergachon.domain.user.dto.request.EmailCheckDto;
 import com.gachon.hypergachon.domain.user.dto.request.LoginReqDto;
+import com.gachon.hypergachon.domain.user.dto.response.EmailCheckResDto;
+import com.gachon.hypergachon.domain.user.dto.response.EmailSendRes;
 import com.gachon.hypergachon.domain.user.dto.response.LoginResDto;
 import com.gachon.hypergachon.domain.user.dto.request.RefreshTokenReqDto;
+import com.gachon.hypergachon.domain.user.dto.response.SignInResDto;
 import com.gachon.hypergachon.domain.user.service.EmailService;
 import com.gachon.hypergachon.response.BaseResponseDto;
 import com.gachon.hypergachon.domain.user.dto.request.EmailReqDto;
@@ -28,12 +31,12 @@ public class UserController {
 
     // email 인증 코드 받는
     @GetMapping("/send-emails")
-    public BaseResponseDto<Boolean> sendEmail(@RequestBody EmailReqDto emailReqDto) throws MessagingException, UnsupportedEncodingException {
+    public BaseResponseDto<EmailSendRes> sendEmail(@RequestBody EmailReqDto emailReqDto) throws MessagingException, UnsupportedEncodingException {
         return new BaseResponseDto<>(emailService.sendEmail(emailReqDto.getEmail()));
     }
 
     @GetMapping("/check-emails")
-    public BaseResponseDto<Boolean> checkEmailCode(@RequestBody EmailCheckDto emailCheckDto) {
+    public BaseResponseDto<EmailCheckResDto> checkEmailCode(@RequestBody EmailCheckDto emailCheckDto) {
         return new BaseResponseDto<>(emailService.checkEmailCode(emailCheckDto));
     }
 
@@ -44,7 +47,7 @@ public class UserController {
 
 
     @PostMapping("/sign-in")
-    public BaseResponseDto<String> signIn(@RequestBody UserDto userDto) {
+    public BaseResponseDto<SignInResDto> signIn(@RequestBody UserDto userDto) {
         return new BaseResponseDto<>(userService.signIn(userDto));
     }
 
