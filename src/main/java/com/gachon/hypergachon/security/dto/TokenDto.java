@@ -1,11 +1,18 @@
 package com.gachon.hypergachon.security.dto;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
-@AllArgsConstructor
+@Builder
 @Getter
 public class TokenDto {
     String accessToken;
     String refreshToken;
+
+    public static TokenDto of(String accessToken, String refreshToken){
+        return TokenDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
 }

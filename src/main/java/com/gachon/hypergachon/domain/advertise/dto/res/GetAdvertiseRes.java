@@ -1,14 +1,12 @@
 package com.gachon.hypergachon.domain.advertise.dto.res;
 
-import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Builder
 @Getter
 public class GetAdvertiseRes {
-    private Long id;
+    private Long postId;
 
     private String title;
 
@@ -23,7 +21,7 @@ public class GetAdvertiseRes {
     private Double longitude;
 
 
-    public static GetAdvertiseRes of(Long id,
+    public static GetAdvertiseRes of(Long postId,
                                      String title,
                                      String content,
                                      String startDate,
@@ -31,7 +29,7 @@ public class GetAdvertiseRes {
                                      Double latitude,
                                      Double longitude) {
         return GetAdvertiseRes.builder()
-                .id(id)
+                .postId(postId)
                 .title(title)
                 .content(content)
                 .startDate(startDate)

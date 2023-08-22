@@ -1,6 +1,8 @@
 package com.gachon.hypergachon.domain.user.service;
 
 import com.gachon.hypergachon.domain.user.dto.request.EmailCheckDto;
+import com.gachon.hypergachon.domain.user.dto.response.EmailCheckResDto;
+import com.gachon.hypergachon.domain.user.dto.response.EmailSendRes;
 import com.gachon.hypergachon.exception.BusinessException;
 import com.gachon.hypergachon.utils.RedisUtil;
 import jakarta.mail.MessagingException;
@@ -58,7 +60,7 @@ public class EmailService {
     }
 
     //실제 메일 전송
-    public Boolean sendEmail(String toEmail) throws MessagingException, UnsupportedEncodingException {
+    public EmailSendRes sendEmail(String toEmail) throws MessagingException, UnsupportedEncodingException {
 
         //메일전송에 필요한 정보 설정
         MimeMessage emailForm = createEmailForm(toEmail);
@@ -69,7 +71,7 @@ public class EmailService {
         //실제 메일 전송
         emailSender.send(emailForm);
 
-        return true;
+        return EmailSendRes.of(true);
     }
 
     //타임리프를 이용한 context 설정
@@ -81,11 +83,11 @@ public class EmailService {
 
 
     // 이메일 확인
-    public Boolean checkEmailCode(EmailCheckDto emailCheckDto){
+    public EmailCheckResDto checkEmailCode(EmailCheckDto emailCheckDto){
         if(!emailCheckDto.getCode().equals(redisUtil.getData(emailCheckDto.getEmail())))
             throw new BusinessException(WRONG_EMAIL_CODE);
 
-        return true;
+        return EmailCheckResDto.of(true);
     }
 
 }
