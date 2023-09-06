@@ -6,6 +6,7 @@ import com.gachon.hypergachon.domain.user.dto.response.EmailSendRes;
 import com.gachon.hypergachon.exception.BusinessException;
 import com.gachon.hypergachon.utils.RedisUtil;
 import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -53,7 +54,7 @@ public class EmailService {
         MimeMessage message = emailSender.createMimeMessage();
         message.addRecipients(MimeMessage.RecipientType.TO, email); //보낼 이메일 설정
         message.setSubject(title); //제목 설정
-        message.setFrom(setFrom); //보내는 이메일
+        message.setFrom(new InternetAddress(setFrom, "HyperGachon", "UTF-8")); //보내는 이메일
         message.setText(setContext(authNum), "utf-8", "html");
 
         return message;

@@ -31,8 +31,8 @@ public class UserController {
 
     // email 인증 코드 받는
     @GetMapping("/send-emails")
-    public BaseResponseDto<EmailSendRes> sendEmail(@RequestBody EmailReqDto emailReqDto) throws MessagingException, UnsupportedEncodingException {
-        return new BaseResponseDto<>(emailService.sendEmail(emailReqDto.getEmail()));
+    public BaseResponseDto<EmailSendRes> sendEmail(@RequestParam String email) throws MessagingException, UnsupportedEncodingException {
+        return new BaseResponseDto<>(emailService.sendEmail(email));
     }
 
     @GetMapping("/check-emails")
