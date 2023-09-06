@@ -40,7 +40,7 @@ public class UserController {
         return new BaseResponseDto<>(emailService.checkEmailCode(emailCheckDto));
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public BaseResponseDto<LoginResDto> login(@RequestBody LoginReqDto loginReqDto, HttpServletResponse response) {
         return new BaseResponseDto<>(userService.login(loginReqDto, response));
     }
