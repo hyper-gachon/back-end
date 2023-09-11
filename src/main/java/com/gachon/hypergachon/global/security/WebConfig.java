@@ -1,4 +1,4 @@
-package com.gachon.hypergachon.security;
+package com.gachon.hypergachon.global.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

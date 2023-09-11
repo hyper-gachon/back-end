@@ -3,8 +3,8 @@ package com.gachon.hypergachon.domain.user.service;
 import com.gachon.hypergachon.domain.user.dto.request.EmailCheckDto;
 import com.gachon.hypergachon.domain.user.dto.response.EmailCheckResDto;
 import com.gachon.hypergachon.domain.user.dto.response.EmailSendRes;
-import com.gachon.hypergachon.exception.BusinessException;
-import com.gachon.hypergachon.utils.RedisUtil;
+import com.gachon.hypergachon.global.exception.BusinessException;
+import com.gachon.hypergachon.global.utils.RedisUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -17,7 +17,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
-import static com.gachon.hypergachon.response.ErrorMessage.WRONG_EMAIL_CODE;
+import static com.gachon.hypergachon.global.response.ErrorMessage.WRONG_EMAIL_CODE;
 
 @Service
 @RequiredArgsConstructor

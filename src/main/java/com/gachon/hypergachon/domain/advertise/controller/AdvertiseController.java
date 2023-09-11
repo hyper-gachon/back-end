@@ -6,7 +6,7 @@ import com.gachon.hypergachon.domain.advertise.dto.res.CreateAdvertiseRes;
 import com.gachon.hypergachon.domain.advertise.dto.res.DeleteAdvertiseRes;
 import com.gachon.hypergachon.domain.advertise.dto.res.GetAdvertiseRes;
 import com.gachon.hypergachon.domain.advertise.service.AdvertiseService;
-import com.gachon.hypergachon.response.BaseResponseDto;
+import com.gachon.hypergachon.global.response.BaseResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;

@@ -8,7 +8,7 @@ import com.gachon.hypergachon.domain.advertise.dto.res.GetAdvertiseRes;
 import com.gachon.hypergachon.domain.advertise.entity.Advertise;
 import com.gachon.hypergachon.domain.advertise.repository.AdvertiseRepository;
 import com.gachon.hypergachon.domain.user.repository.UserRepository;
-import com.gachon.hypergachon.exception.BusinessException;
+import com.gachon.hypergachon.global.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.gachon.hypergachon.response.ErrorMessage.*;
+import static com.gachon.hypergachon.global.response.ErrorMessage.*;
 
 
 @Transactional

@@ -1,7 +1,7 @@
 package com.gachon.hypergachon.domain.advertise.entity;
 
 import com.gachon.hypergachon.domain.user.entity.User;
-import com.gachon.hypergachon.entity.BaseTimeEntity;
+import com.gachon.hypergachon.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
