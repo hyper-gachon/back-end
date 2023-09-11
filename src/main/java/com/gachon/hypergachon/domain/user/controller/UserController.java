@@ -35,7 +35,7 @@ public class UserController {
         return new BaseResponseDto<>(emailService.sendEmail(email));
     }
 
-    @GetMapping("/check-emails")
+    @PostMapping("/check-emails")
     public BaseResponseDto<EmailCheckResDto> checkEmailCode(@RequestBody EmailCheckDto emailCheckDto) {
         return new BaseResponseDto<>(emailService.checkEmailCode(emailCheckDto));
     }
@@ -51,7 +51,7 @@ public class UserController {
         return new BaseResponseDto<>(userService.signIn(userDto));
     }
 
-    @GetMapping("/access")
+    @PostMapping("/access")
     public BaseResponseDto<TokenDto> accessRequest(@RequestBody RefreshTokenReqDto refreshTokenReqDto, HttpServletRequest request) {
         TokenDto tokenDto = userService.accessRequest(refreshTokenReqDto.getRefreshToken(), request);
         return new BaseResponseDto<>(tokenDto);
