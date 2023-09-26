@@ -18,7 +18,7 @@ public class AcademicScheduleController {
         this.academicScheduleService = webCrawlingService;
     }
 
-    @GetMapping("/crawling/academic_schedule")
+    @GetMapping("api/crawling/academic_schedule")
     public ResponseEntity<String> crawlWeb() {
         Optional<String> result = Optional.ofNullable(academicScheduleService.getAcademicSchedule("https://www.gachon.ac.kr/kor/1075/subview.do"));
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());

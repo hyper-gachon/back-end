@@ -1,12 +1,10 @@
-package com.gachon.hypergachon.response;
+package com.gachon.hypergachon.global.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-
-import static com.gachon.hypergachon.response.SuccessMessage.SUCCESS;
 
 
 @Getter
@@ -23,8 +21,8 @@ public class BaseResponseDto<T> {
     // 요청에 성공한 경우
     public BaseResponseDto(T result) {
         this.code = HttpStatus.OK.value();
-        this.isSuccess = SUCCESS.isSuccess();
-        this.message = SUCCESS.getMessage();
+        this.isSuccess = SuccessMessage.SUCCESS.isSuccess();
+        this.message = SuccessMessage.SUCCESS.getMessage();
         this.result = result;
     }
 

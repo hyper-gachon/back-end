@@ -1,4 +1,4 @@
-package com.gachon.hypergachon.utils;
+package com.gachon.hypergachon.global.utils;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;

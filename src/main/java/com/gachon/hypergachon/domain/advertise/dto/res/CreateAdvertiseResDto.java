@@ -6,11 +6,11 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class CreateAdvertiseRes {
+public class CreateAdvertiseResDto {
     Long postId;
 
-    public static CreateAdvertiseRes of(Long postId) {
-        return CreateAdvertiseRes.builder()
+    public static CreateAdvertiseResDto of(Long postId) {
+        return CreateAdvertiseResDto.builder()
                 .postId(postId)
                 .build();
     }

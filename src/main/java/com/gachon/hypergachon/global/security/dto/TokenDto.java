@@ -1,4 +1,4 @@
-package com.gachon.hypergachon.security.dto;
+package com.gachon.hypergachon.global.security.dto;
 
 import lombok.Builder;
 import lombok.Getter;

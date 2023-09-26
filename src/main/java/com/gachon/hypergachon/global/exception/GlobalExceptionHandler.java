@@ -1,7 +1,7 @@
-package com.gachon.hypergachon.exception;
+package com.gachon.hypergachon.global.exception;
 
-import com.gachon.hypergachon.response.BaseResponseDto;
-import com.gachon.hypergachon.response.ErrorMessage;
+import com.gachon.hypergachon.global.response.ErrorMessage;
+import com.gachon.hypergachon.global.response.BaseResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;

@@ -1,4 +1,4 @@
-package com.gachon.hypergachon.response;
+package com.gachon.hypergachon.global.response;
 
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -5,12 +5,12 @@ import com.gachon.hypergachon.domain.user.dto.response.LoginResDto;
 import com.gachon.hypergachon.domain.user.dto.response.SignInResDto;
 import com.gachon.hypergachon.domain.user.entity.User;
 import com.gachon.hypergachon.domain.user.repository.UserRepository;
-import com.gachon.hypergachon.exception.BusinessException;
+import com.gachon.hypergachon.global.exception.BusinessException;
 import com.gachon.hypergachon.domain.user.dto.request.UserDto;
-import com.gachon.hypergachon.security.AuthConstants;
-import com.gachon.hypergachon.security.TokenProvider;
-import com.gachon.hypergachon.security.dto.TokenDto;
-import com.gachon.hypergachon.utils.RedisUtil;
+import com.gachon.hypergachon.global.security.AuthConstants;
+import com.gachon.hypergachon.global.security.TokenProvider;
+import com.gachon.hypergachon.global.security.dto.TokenDto;
+import com.gachon.hypergachon.global.utils.RedisUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static com.gachon.hypergachon.response.ErrorMessage.*;
+import static com.gachon.hypergachon.global.response.ErrorMessage.*;
 
 @Transactional
 @Service

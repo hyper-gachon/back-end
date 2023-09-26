@@ -1,7 +1,7 @@
-package com.gachon.hypergachon.security;
+package com.gachon.hypergachon.global.security;
 
-import com.gachon.hypergachon.exception.BusinessException;
-import com.gachon.hypergachon.response.ErrorMessage;
+import com.gachon.hypergachon.global.exception.BusinessException;
+import com.gachon.hypergachon.global.response.ErrorMessage;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;

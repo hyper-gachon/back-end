@@ -1,7 +1,7 @@
-package com.gachon.hypergachon.exception;
+package com.gachon.hypergachon.global.exception;
 
 
-import com.gachon.hypergachon.response.ErrorMessage;
+import com.gachon.hypergachon.global.response.ErrorMessage;
 import lombok.Getter;
 
 @Getter

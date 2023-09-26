@@ -1,4 +1,4 @@
-package com.gachon.hypergachon.entity;
+package com.gachon.hypergachon.global.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

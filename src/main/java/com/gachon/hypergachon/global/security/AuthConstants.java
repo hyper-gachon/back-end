@@ -1,4 +1,4 @@
-package com.gachon.hypergachon.security;
+package com.gachon.hypergachon.global.security;
 
 public final class AuthConstants {
     public static final String AUTH_HEADER = "Authorization";

@@ -1,8 +1,7 @@
-package com.gachon.hypergachon.security;
+package com.gachon.hypergachon.global.security;
 
-import com.gachon.hypergachon.exception.BusinessException;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
+import com.gachon.hypergachon.global.exception.BusinessException;
+import com.gachon.hypergachon.global.response.ErrorMessage;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,13 +21,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.SignatureException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-
-import static com.gachon.hypergachon.response.ErrorMessage.*;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -43,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 1. 토큰이 필요하지 않은 API URL에 대해서 배열로 구성합니다.
         List<String> list = Arrays.asList(
-                "/users/login", "/users/sign-in", "/users/send-emails", "/users/check-emails", "/users/access"
+                "/api/users/login", "/api/users/sign-in", "/api/users/send-emails", "/api/users/check-emails", "/api/users/access", "/"
 //                "api/v1/code/codeList"
         );
         if(request.getRequestURI().equals("/"))
@@ -86,13 +82,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                     chain.doFilter(request, response);
                 } else {
-                    throw new BusinessException(INVAILID_USERID_JWT_TOKEN);
+                    throw new BusinessException(ErrorMessage.INVAILID_USERID_JWT_TOKEN);
                 }
 
             }
             // [STEP2-1] 토큰이 존재하지 않는 경우
             else {
-                throw new BusinessException(NOT_FIND_JWT_TOKEN);
+                throw new BusinessException(ErrorMessage.NOT_FIND_JWT_TOKEN);
             }
         } catch (BusinessException e) {
             // Token 내에 Exception이 발생 하였을 경우 => 클라이언트에 응답값을 반환하고 종료합니다.
