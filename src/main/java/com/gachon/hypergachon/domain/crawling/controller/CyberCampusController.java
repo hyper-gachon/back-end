@@ -18,7 +18,7 @@ public class CyberCampusController {
         this.cyberCampusService = webCrawlingService;
     }
 
-    @GetMapping("/crawling/cybercampus")
+    @GetMapping("api/crawling/cybercampus")
     public ResponseEntity<String> crawlWeb() {
         /*
         getCyberCampus는 selenium으로 웹페이지를 직접 열어 가져오기 때문에,

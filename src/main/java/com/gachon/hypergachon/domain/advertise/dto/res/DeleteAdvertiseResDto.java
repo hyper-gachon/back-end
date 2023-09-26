@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class DeleteAdvertiseRes {
+public class DeleteAdvertiseResDto {
     Boolean isSuccess;
 
-    public static DeleteAdvertiseRes of(Boolean isSuccess){
-        return DeleteAdvertiseRes.builder()
+    public static DeleteAdvertiseResDto of(Boolean isSuccess){
+        return DeleteAdvertiseResDto.builder()
                 .isSuccess(isSuccess)
                 .build();
     }

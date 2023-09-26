@@ -22,7 +22,7 @@ import java.io.UnsupportedEncodingException;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users")
+@RequestMapping("api/users")
 public class UserController {
 
     private final EmailService emailService;

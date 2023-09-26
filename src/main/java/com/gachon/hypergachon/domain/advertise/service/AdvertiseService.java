@@ -2,9 +2,9 @@ package com.gachon.hypergachon.domain.advertise.service;
 
 import com.gachon.hypergachon.domain.advertise.dto.req.CreateAdvertiseReq;
 import com.gachon.hypergachon.domain.advertise.dto.req.UpdateAdvertiseReq;
-import com.gachon.hypergachon.domain.advertise.dto.res.CreateAdvertiseRes;
-import com.gachon.hypergachon.domain.advertise.dto.res.DeleteAdvertiseRes;
-import com.gachon.hypergachon.domain.advertise.dto.res.GetAdvertiseRes;
+import com.gachon.hypergachon.domain.advertise.dto.res.CreateAdvertiseResDto;
+import com.gachon.hypergachon.domain.advertise.dto.res.DeleteAdvertiseResDto;
+import com.gachon.hypergachon.domain.advertise.dto.res.GetAdvertiseResDto;
 import com.gachon.hypergachon.domain.advertise.entity.Advertise;
 import com.gachon.hypergachon.domain.advertise.repository.AdvertiseRepository;
 import com.gachon.hypergachon.domain.user.repository.UserRepository;
@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.gachon.hypergachon.global.response.ErrorMessage.*;
 
@@ -29,7 +30,7 @@ public class AdvertiseService {
     private final UserRepository userRepository;
 
     // 광고 제작 탭
-    public CreateAdvertiseRes createAd(User user, CreateAdvertiseReq createAdvertiseReq) {
+    public CreateAdvertiseResDto createAd(User user, CreateAdvertiseReq createAdvertiseReq) {
 
         Advertise advertise = Advertise.builder()
                 .user(userRepository.findById(Long.valueOf(user.getUsername())).get())
@@ -43,17 +44,24 @@ public class AdvertiseService {
 
         Advertise createAdvertise = advertiseRepository.save(advertise);
 
-        return CreateAdvertiseRes.of(createAdvertise.getId());
+        return CreateAdvertiseResDto.of(createAdvertise.getId());
+    }
+
+    public List<GetAdvertiseResDto> findAll(User user) {
+        List<Advertise> advertiseList = advertiseRepository.findAllByOrderByCreatedDateDesc();
+        return advertiseList.stream()
+                .map(GetAdvertiseResDto::of)
+                .collect(Collectors.toList());
     }
 
     // 유저 올린 광고 찾기
-    public ArrayList<GetAdvertiseRes> findByUserId(User user){
-        List<Advertise> advertiseList = userRepository.findById(Long.parseLong(user.getUsername())).get().getAdvertises();
-        ArrayList<GetAdvertiseRes> getAdvertiseResList = new ArrayList<>();
+    public ArrayList<GetAdvertiseResDto> findByUserId(User user){
+        List<Advertise> advertiseList = advertiseRepository.findByUserOrderByCreatedDateDesc(userRepository.findById(Long.parseLong(user.getUsername())).get());
+        ArrayList<GetAdvertiseResDto> getAdvertiseResDtoList = new ArrayList<>();
 
         for (Advertise advertise : advertiseList) {
-            GetAdvertiseRes getAdvertiseRes =
-                    GetAdvertiseRes.of(
+            GetAdvertiseResDto getAdvertiseResDto =
+                    GetAdvertiseResDto.of(
                             advertise.getId(),
                             advertise.getTitle(),
                             advertise.getContent(),
@@ -62,13 +70,13 @@ public class AdvertiseService {
                             advertise.getLatitude(),
                             advertise.getLongitude());
 
-            getAdvertiseResList.add(getAdvertiseRes);
+            getAdvertiseResDtoList.add(getAdvertiseResDto);
            }
-        return getAdvertiseResList;
+        return getAdvertiseResDtoList;
     }
 
     // 유저 올린 광고 삭제
-    public DeleteAdvertiseRes deleteAdvertise(User user, Long postId){
+    public DeleteAdvertiseResDto deleteAdvertise(User user, Long postId){
         Optional<Advertise> advertise = advertiseRepository.findById(postId);
 
         // 해당 광고가 존재하는지 확인
@@ -80,11 +88,11 @@ public class AdvertiseService {
 
         advertiseRepository.deleteById(postId);
 
-        return DeleteAdvertiseRes.of(true);
+        return DeleteAdvertiseResDto.of(true);
     }
 
 
-    public GetAdvertiseRes updateAdvertise(User user, UpdateAdvertiseReq updateAdvertiseReq){
+    public GetAdvertiseResDto updateAdvertise(User user, UpdateAdvertiseReq updateAdvertiseReq){
 
         Optional<Advertise> advertise = advertiseRepository.findById(updateAdvertiseReq.getPostId());
 
@@ -106,7 +114,7 @@ public class AdvertiseService {
                 updateAdvertiseReq.getLongitude()
         );
 
-        return GetAdvertiseRes.of(ad.getId(), ad.getTitle(), ad.getContent(), ad.getStartDate(), ad.getEndDate(),ad.getLatitude(),ad.getLongitude());
+        return GetAdvertiseResDto.of(ad.getId(), ad.getTitle(), ad.getContent(), ad.getStartDate(), ad.getEndDate(),ad.getLatitude(),ad.getLongitude());
     }
 
     // 해당 포스트를 작성한 유저인지 확인

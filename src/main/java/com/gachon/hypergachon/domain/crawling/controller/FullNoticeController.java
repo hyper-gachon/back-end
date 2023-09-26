@@ -18,7 +18,7 @@ public class FullNoticeController {
         this.fullNoticeService = webCrawlingService;
     }
 
-    @GetMapping("/crawling/fullnotice")
+    @GetMapping("api/crawling/fullnotice")
     public ResponseEntity<String> crawlWeb() {
         Optional<String> result = Optional.ofNullable(fullNoticeService.getFullNotice("https://www.gachon.ac.kr/kor/7986/subview.do"));
         return result.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
