@@ -23,9 +23,7 @@ import static com.gachon.hypergachon.global.response.ErrorMessage.WRONG_EMAIL_CO
 @RequiredArgsConstructor
 public class EmailService {
 
-    //의존성 주입을 통해서 필요한 객체를 가져온다.
     private final JavaMailSender emailSender;
-    // 타임리프를사용하기 위한 객체를 의존성 주입으로 가져온다
     private final SpringTemplateEngine templateEngine;
 
     private final RedisUtil redisUtil;

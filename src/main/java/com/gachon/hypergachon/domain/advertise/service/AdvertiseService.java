@@ -104,7 +104,6 @@ public class AdvertiseService {
         checkAdvertiseUser(advertise, Long.parseLong(user.getUsername()));
 
         Advertise ad = advertise.get();
-
         ad.update(
                 updateAdvertiseReq.getTitle(),
                 updateAdvertiseReq.getContent(),
