@@ -7,7 +7,9 @@ import com.gachon.hypergachon.domain.advertise.dto.res.DeleteAdvertiseResDto;
 import com.gachon.hypergachon.domain.advertise.dto.res.GetAdvertiseResDto;
 import com.gachon.hypergachon.domain.advertise.entity.Advertise;
 import com.gachon.hypergachon.domain.advertise.repository.AdvertiseRepository;
+import com.gachon.hypergachon.domain.location.dto.response.GetBuildingRes;
 import com.gachon.hypergachon.domain.user.repository.UserRepository;
+import com.gachon.hypergachon.global.building.Building;
 import com.gachon.hypergachon.global.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
@@ -32,6 +34,8 @@ public class AdvertiseService {
     // 광고 제작 탭
     public CreateAdvertiseResDto createAd(User user, CreateAdvertiseReq createAdvertiseReq) {
 
+        Building building = getBuildingNameByGPS(createAdvertiseReq.getLatitude(), createAdvertiseReq.getLongitude());
+
         Advertise advertise = Advertise.builder()
                 .user(userRepository.findById(Long.valueOf(user.getUsername())).get())
                 .title(createAdvertiseReq.getTitle())
@@ -40,6 +44,7 @@ public class AdvertiseService {
                 .endDate(createAdvertiseReq.getEndDate())
                 .latitude(createAdvertiseReq.getLatitude())
                 .longitude(createAdvertiseReq.getLongitude())
+                .building(building)
                 .build();
 
         Advertise createAdvertise = advertiseRepository.save(advertise);
@@ -77,11 +82,7 @@ public class AdvertiseService {
 
     // 유저 올린 광고 삭제
     public DeleteAdvertiseResDto deleteAdvertise(User user, Long postId){
-        Optional<Advertise> advertise = advertiseRepository.findById(postId);
-
-        // 해당 광고가 존재하는지 확인
-        if(!advertise.isPresent())
-            throw new BusinessException(ADVERTISE_NOT_FOUND);
+        Advertise advertise = getAdvertiseById(postId);
 
         // 해당 포스트를 작성한 유저인지 확인
         checkAdvertiseUser(advertise, Long.parseLong(user.getUsername()));
@@ -94,31 +95,47 @@ public class AdvertiseService {
 
     public GetAdvertiseResDto updateAdvertise(User user, UpdateAdvertiseReq updateAdvertiseReq){
 
-        Optional<Advertise> advertise = advertiseRepository.findById(updateAdvertiseReq.getPostId());
-
-        // 해당 광고가 존재하는지 확인
-        if(!advertise.isPresent())
-            throw new BusinessException(ADVERTISE_NOT_FOUND);
+        Advertise advertise = getAdvertiseById(updateAdvertiseReq.getPostId());
 
         // 해당 포스트를 작성한 유저인지 확인
         checkAdvertiseUser(advertise, Long.parseLong(user.getUsername()));
-
-        Advertise ad = advertise.get();
-        ad.update(
+        Building building = getBuildingNameByGPS(updateAdvertiseReq.getLatitude(), updateAdvertiseReq.getLongitude());
+        advertise.update(
                 updateAdvertiseReq.getTitle(),
                 updateAdvertiseReq.getContent(),
                 updateAdvertiseReq.getStartDate(),
                 updateAdvertiseReq.getEndDate(),
                 updateAdvertiseReq.getLatitude(),
-                updateAdvertiseReq.getLongitude()
+                updateAdvertiseReq.getLongitude(),
+                building
         );
 
-        return GetAdvertiseResDto.of(ad.getId(), ad.getTitle(), ad.getContent(), ad.getStartDate(), ad.getEndDate(),ad.getLatitude(),ad.getLongitude());
+        return GetAdvertiseResDto.of(advertise);
+    }
+
+    public GetAdvertiseResDto getAdvertiseDetail(Long postId) {
+        Advertise advertise = getAdvertiseById(postId);
+        return GetAdvertiseResDto.of(advertise);
+    }
+
+    private Advertise getAdvertiseById(Long postId) {
+        return advertiseRepository.findById(postId)
+                .orElseThrow(() ->  new BusinessException(ADVERTISE_NOT_FOUND));
     }
 
     // 해당 포스트를 작성한 유저인지 확인
-    public void checkAdvertiseUser(Optional<Advertise> advertise, Long userId) {
-        if(advertise.get().getUser().getId() != userId)
+    private void checkAdvertiseUser(Advertise advertise, Long userId) {
+        if(advertise.getUser().getId() != userId)
             throw new BusinessException(WRITER_NOT_MATCH);
+    }
+
+    private Building getBuildingNameByGPS(Double latitude, Double longitude) {
+        Building building;
+        try {
+            building = Building.getBuilding(latitude, longitude);
+        } catch(BusinessException e) {
+            building = Building.getClosestBuilding(latitude, longitude);
+        }
+        return building;
     }
 }

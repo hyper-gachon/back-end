@@ -60,4 +60,9 @@ public class AdvertiseController {
         return new BaseResponseDto<>(advertiseService.updateAdvertise(user, updateAdvertiseReq));
     }
 
+    @GetMapping("/{postId}")
+    public BaseResponseDto<GetAdvertiseResDto> getAdvertiseDetail(@PathVariable Long postId) {
+        return new BaseResponseDto<>(advertiseService.getAdvertiseDetail(postId));
+    }
+
 }

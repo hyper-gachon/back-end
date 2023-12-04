@@ -1,5 +1,6 @@
 package com.gachon.hypergachon.domain.location.controller;
 
+import com.gachon.hypergachon.domain.location.dto.response.GetAroundAdvertisementRes;
 import com.gachon.hypergachon.domain.location.dto.response.GetBuildingRes;
 import com.gachon.hypergachon.domain.location.service.LocationService;
 import com.gachon.hypergachon.global.response.BaseResponseDto;
@@ -19,5 +20,10 @@ public class LocationController {
     @GetMapping("/building")
     public BaseResponseDto<GetBuildingRes> getBuildingByGPS(@RequestParam Double latitude, @RequestParam Double longitude) {
         return new BaseResponseDto<>(locationService.getBuildingNameByGPS(latitude, longitude));
+    }
+
+    @GetMapping("/around")
+    public BaseResponseDto<GetAroundAdvertisementRes> getAroundAdvertisements(@RequestParam Double latitude, @RequestParam Double longitude) {
+        return new BaseResponseDto<>(locationService.getAroundAdvertisements(latitude, longitude));
     }
 }

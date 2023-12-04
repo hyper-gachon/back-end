@@ -4,6 +4,8 @@ import com.gachon.hypergachon.domain.advertise.entity.Advertise;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 @Builder
 @Getter
 public class GetAdvertiseResDto {
@@ -13,9 +15,9 @@ public class GetAdvertiseResDto {
 
     private String content;
 
-    private String startDate;
+    private LocalDate startDate;
 
-    private String endDate;
+    private LocalDate endDate;
 
     private Double latitude;
 
@@ -25,8 +27,8 @@ public class GetAdvertiseResDto {
     public static GetAdvertiseResDto of(Long postId,
                                         String title,
                                         String content,
-                                        String startDate,
-                                        String endDate,
+                                        LocalDate startDate,
+                                        LocalDate endDate,
                                         Double latitude,
                                         Double longitude) {
         return GetAdvertiseResDto.builder()
